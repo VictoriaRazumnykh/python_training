@@ -1,1 +1,1 @@
-# repository for python_training
+# repository for python_training _windows
