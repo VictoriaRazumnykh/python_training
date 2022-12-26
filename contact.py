@@ -1,11 +1,11 @@
-class Contacts:
+class Contact:
 
-    def __init__(self, firstname, middlename, lastname, Title, company, address, home_phone, mobile_phone,
+    def __init__(self, firstname, middlename, lastname, title, company, address, home_phone, mobile_phone,
                        work_phone, fax, email1, email2, byear, bday, bmonth):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
-        self.Title = Title
+        self.title = title
         self.company = company
         self.address = address
         self.home_phone = home_phone
