@@ -5,7 +5,7 @@ fixture = None
 
 
 # функция, которая инициализирует фикстуру
-@pytest.fixture(scope="session")
+@pytest.fixture
 def app(request):
     global fixture
     if fixture is None:
@@ -21,8 +21,7 @@ def app(request):
 @pytest.fixture(scope="session", autouse=True)
 def stop(request):
     def fin():
-        fixture.session.logout()
+        fixture.session.ensure_logout()
         fixture.destroy()
-
     request.addfinalizer(fin)
     return fixture
