@@ -1,3 +1,4 @@
+from sys import maxsize
 class Group:
 
     def __init__(self, name=None, header=None, footer=None, id=None):
@@ -13,4 +14,11 @@ class Group:
 # тк питон считает объекты разными из-за физического расположения, определяем ф-цию, которая реализует логическое сравнение
 #чтобы сравнение выполнялось по смыслу
     def __eq__(self, other):
-        return self.id == other.id and self.name == other.name
+        return (self.id is None or other.id is None or self.id == other.id) and self.name == other.name
+
+#функция для вычисления ключа, по которому сравнивается группа
+    def id_or_max(self):
+        if self.id:
+            return int(self.id)
+        else:
+            return maxsize
