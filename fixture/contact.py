@@ -34,11 +34,11 @@ class ContactHelper:
         self.change_field_value("fax", contact.fax)
         self.change_field_value("email", contact.email1)
         self.change_field_value("email2", contact.email2)
+        self.change_field_value("email3", contact.email3)
         self.change_box_value("bday", contact.bday)
         self.change_box_value("bmonth", contact.bmonth)
         self.change_field_value("byear", contact.byear)
         self.change_field_value("phone2", contact.secondary_phone)
-
 
     def return_to_address_book_entry(self):
         wd = self.app.wd
@@ -105,9 +105,12 @@ class ContactHelper:
                 id = text[0].find_element_by_name("selected[]").get_attribute("value")
                 last_name = text[1].text
                 first_name = text[2].text
+                address = text[3].text
+                all_emails = text[4].text
                 all_phones = text[5].text
                 self.contact_cache.append(Contact(firstname=first_name, lastname=last_name, id=id,
-                                                  all_phones_from_home_page=all_phones))
+                                                  all_phones_from_home_page=all_phones, all_emails=all_emails,
+                                                  address=address))
         return list(self.contact_cache)
 
     def open_contact_view_by_index(self, index):
@@ -128,7 +131,7 @@ class ContactHelper:
         wd = self.app.wd
         # открываем форму редактирования по заданному индексу
         self.open_contact_to_edit_by_index(index)
-        # читаем информауию из формы
+        # читаем информацию из формы
         firstname = wd.find_element_by_name("firstname").get_attribute("value")
         lastname = wd.find_element_by_name("lastname").get_attribute("value")
         id = wd.find_element_by_name("id").get_attribute("value")
@@ -136,16 +139,31 @@ class ContactHelper:
         workphone = wd.find_element_by_name("work").get_attribute("value")
         mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
         secondaryphone = wd.find_element_by_name("phone2").get_attribute("value")
+        email1 = wd.find_element_by_name("email").get_attribute("value")
+        email2 = wd.find_element_by_name("email2").get_attribute("value")
+        email3 = wd.find_element_by_name("email3").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
         return Contact(firstname=firstname, lastname=lastname, id=id, home_phone=homephone, mobile_phone=mobilephone,
-                       work_phone=workphone, secondary_phone=secondaryphone)
+                       work_phone=workphone, secondary_phone=secondaryphone, email1=email1, email2=email2,
+                       email3=email3, address=address)
 
     def get_contact_from_view_page(self, index):
         wd = self.app.wd
         self.open_contact_view_by_index(index)
         text = wd.find_element_by_id("content").text
+        first_second_name = re.search("(.*)\n", text).group(1).split()
+        firstname = first_second_name[0]
+        lastname = first_second_name[2]
         homephone = re.search("H: (.*)", text).group(1)
         workphone = re.search("W: (.*)", text).group(1)
         mobilephone = re.search("M: (.*)", text).group(1)
         secondaryphone = re.search("P: (.*)", text).group(1)
-        return Contact(home_phone=homephone, mobile_phone=mobilephone,
-                       work_phone=workphone, secondary_phone=secondaryphone)
+        all_emails = []
+        for element in wd.find_element_by_id("content").find_elements_by_css_selector("a"):
+            if re.search("(.*)@(.*).*", element.text) is not None:
+                all_emails.append(element.text)
+        address = text.split()[5]
+        return Contact(firstname=firstname, lastname=lastname, home_phone=homephone, mobile_phone=mobilephone,
+                       work_phone=workphone, secondary_phone=secondaryphone, email1=all_emails[0], email2=all_emails[1],
+                       email3=all_emails[2], address=address)
+
