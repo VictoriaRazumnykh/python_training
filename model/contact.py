@@ -1,12 +1,13 @@
 
 from sys import maxsize
+import re
 
 
 class Contact:
 
     def __init__(self, firstname=None, middlename=None, lastname=None, title=None, company=None, address=None,
                  home_phone=None, mobile_phone=None,
-                 work_phone=None, fax=None, email1=None, email2=None, byear=None, bday=None, bmonth=None, id=None):
+                 work_phone=None, fax=None, email1=None, email2=None, byear=None, bday=None, bmonth=None, id=None, secondary_phone=None):
         self.firstname = firstname
         self.middlename = middlename
         self.lastname = lastname
@@ -23,6 +24,7 @@ class Contact:
         self.bday = bday
         self.bmonth = bmonth
         self.id = id
+        self.secondary_phone = secondary_phone
 
     def __repr__(self):
         return "%s:%s:%s" % (self.id, self.lastname, self.firstname)
@@ -36,3 +38,6 @@ class Contact:
             return int(self.id)
         else:
             return maxsize
+
+    def clear(s):
+        return re.sub("[() -]", "", s)
