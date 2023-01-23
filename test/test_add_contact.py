@@ -69,7 +69,7 @@ testdata = [Contact(firstname="", middlename="", lastname="", title="",
                     company="", address="", home_phone="",
                     mobile_phone="",
                     work_phone="", fax="", email1="", email2="", email3="",
-                    byear="", bday="", bmonth="April", secondary_phone="")] + [
+                    byear="", bday="", bmonth="-", secondary_phone="")] + [
                Contact(firstname=random_string("firstname", 5),
                        middlename=random_string("middlename", 5),
                        lastname=random_string("lastname", 5),
