@@ -2,9 +2,10 @@ import pytest
 from fixture.application import Application
 import json
 import os.path
+import importlib
 
 fixture = None
-target=None
+target = None
 
 
 # функция, которая инициализирует фикстуру
@@ -14,12 +15,13 @@ def app(request):
     global target
     browser = request.config.getoption("--browser")
     if target is None:
-        #автоматическое определение пути к файлу относительно директории проекта
+        # автоматическое определение пути к файлу относительно директории проекта
         config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--target"))
         with open(config_file) as f:
             target = json.load(f)
     if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, base_url=target["baseUrl"], user=target["username"], password=target["password"])
+        fixture = Application(browser=browser, base_url=target["baseUrl"], user=target["username"],
+                              password=target["password"])
     fixture.session.ensure_login(username=target['username'], password=target['password'])
     return fixture
 
@@ -38,6 +40,16 @@ def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
     parser.addoption("--target", action="store", default="target.json")
 
-    #parser.addoption("--baseUrl", action="store", default="http://localhost/addressbook/")
-    #parser.addoption("--user", action="store", default="admin")
-    #parser.addoption("--password", action="store", default="secret")
+
+# metafunc - через этот объект можно получить практически полную информацию о тестовой функции
+def pytest_generate_tests(metafunc):
+    for fixture in metafunc.fixturenames:
+        if fixture.startswith("data_"):
+            testdata = load_from_module(fixture[5:])
+            metafunc.parametrize(fixture, testdata, ids=[str(x) for x in testdata])
+
+
+def load_from_module(module):
+    return importlib.import_module("data.%s" % module).testdata
+
+
