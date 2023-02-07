@@ -64,6 +64,16 @@ class ContactHelper:
         self.app.open_home_page()
         self.contact_cache = None
 
+    def edit_contact_by_id(self, id, contact):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_contact_by_id(id)
+        wd.find_element_by_xpath("//img[@title='Edit']").click()
+        self.fill_contact_form(contact)
+        wd.find_element_by_name("update").click()
+        self.app.open_home_page()
+        self.contact_cache = None
+
     def change_field_value(self, field_name, text):
         wd = self.app.wd
         if text is not None:
@@ -85,6 +95,19 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_home_page()
         wd.find_elements_by_name("selected[]")[index].click()
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        wd.switch_to.alert.accept()
+        self.app.open_home_page()
+        self.contact_cache = None
+
+    def select_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_contact_by_id(id)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to.alert.accept()
         self.app.open_home_page()
