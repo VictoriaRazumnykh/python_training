@@ -7,7 +7,7 @@ def test_edit_first_contact(app, db, check_ui):
         app.contact.create_contact(Contact(firstname="test"))
     old_contacts = db.get_contact_list()
     contact = random.choice(old_contacts)
-    new_contact = Contact(firstname="Harry", middlename="James", lastname="Potter", title="Title",
+    new_contact = Contact(firstname="Harry1", middlename="James1", lastname="Potter1", title="Title",
                           company="Hogwarts", address="Sennaya", home_phone="7777777",
                           mobile_phone="89609999999",
                           work_phone="567", fax="678", email1="mu@ya.ru", email2="victoria@ya.ru",
@@ -17,7 +17,11 @@ def test_edit_first_contact(app, db, check_ui):
     app.contact.edit_contact_by_id(contact.id, new_contact)
     new_contacts = db.get_contact_list()
     assert len(old_contacts) == len(new_contacts)
-    # assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
+    for i in range(len(old_contacts)):
+        if old_contacts[i].id == contact.id:
+            old_contacts[i] = new_contact
+            old_contacts[i].id = contact.id
+    assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
     if check_ui:
         assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contact_list(),
                                                                      key=Contact.id_or_max)
