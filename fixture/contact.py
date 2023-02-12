@@ -132,7 +132,7 @@ class ContactHelper:
                 all_emails = text[4].text
                 all_phones = text[5].text
                 self.contact_cache.append(Contact(firstname=first_name, lastname=last_name, id=id,
-                                                  all_phones_from_home_page=all_phones, all_emails=all_emails,
+                                                  all_phones=all_phones, all_emails=all_emails,
                                                   address=address))
         return list(self.contact_cache)
 
