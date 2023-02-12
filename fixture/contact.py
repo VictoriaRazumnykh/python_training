@@ -68,7 +68,7 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_home_page()
         self.select_contact_by_id(id)
-        wd.find_element_by_xpath("//img[@title='Edit']").click()
+        wd.find_element_by_xpath('//a[@href="edit.php?id=%s"]' % id).click()
         self.fill_contact_form(contact)
         wd.find_element_by_name("update").click()
         self.app.open_home_page()
@@ -189,4 +189,3 @@ class ContactHelper:
         return Contact(firstname=firstname, lastname=lastname, home_phone=homephone, mobile_phone=mobilephone,
                        work_phone=workphone, secondary_phone=secondaryphone, email1=all_emails[0], email2=all_emails[1],
                        email3=all_emails[2], address=address)
-
