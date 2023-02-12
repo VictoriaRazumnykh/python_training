@@ -189,3 +189,21 @@ class ContactHelper:
         return Contact(firstname=firstname, lastname=lastname, home_phone=homephone, mobile_phone=mobilephone,
                        work_phone=workphone, secondary_phone=secondaryphone, email1=all_emails[0], email2=all_emails[1],
                        email3=all_emails[2], address=address)
+
+    def add_contact_to_group(self, contact, group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        self.select_contact_by_id(contact.id)
+        Select(wd.find_element_by_name("to_group")).select_by_value("%s" % group.id)
+        wd.find_element_by_name("add").click()
+        wd.find_elements_by_css_selector("div.msgbox")
+        self.app.open_home_page()
+
+    def delete_contact_from_group(self, contact, group):
+        wd = self.app.wd
+        self.app.open_home_page()
+        Select(wd.find_element_by_name("group")).select_by_value("%s" % group.id)
+        self.select_contact_by_id(contact.id)
+        wd.find_element_by_name("remove").click()
+        wd.find_elements_by_css_selector("div.msgbox")
+        self.app.open_home_page()
