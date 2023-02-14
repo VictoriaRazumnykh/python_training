@@ -7,7 +7,7 @@ def test_delete_contact_from_group(app, db, orm):
     if len(db.get_group_list()) == 0:
         app.group.create(Group(name="Group2"))
     if len(db.get_contact_list()) == 0:
-        app.contact.create(Contact(firstname="Ronald"))
+        app.contact.create_contact(Contact(firstname="Ronald"))
     group = random.choice(db.get_group_list())
     contact = random.choice(db.get_contact_list())
     if contact not in (orm.get_contacts_in_group(group)):
